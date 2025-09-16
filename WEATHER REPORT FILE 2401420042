@@ -1,0 +1,125 @@
+# Weather Data Storage System
+# Assignment 1 - Data Structures
+
+class WeatherRecord:
+    """ADT for Weather Record"""
+
+    def __init__(self, date, city, temperature):
+        self.date = date
+        self.city = city
+        self.temperature = temperature
+
+
+class WeatherDataStorage:
+    """2D Array-based Weather Data Storage"""
+
+    def __init__(self, years, cities):
+        # Rows → Years, Columns → Cities
+        self.years = years
+        self.cities = cities
+        self.data = [[None for _ in range(len(cities))] for _ in range(len(years))]
+
+    def insert(self, year, city, temperature):
+        """Insert new weather record"""
+        if year in self.years and city in self.cities:
+            row = self.years.index(year)
+            col = self.cities.index(city)
+            self.data[row][col] = temperature
+            print(f"Inserted {temperature}°C for {city}, {year}")
+        else:
+            print("Invalid year or city")
+
+    def delete(self, year, city):
+        """Delete record (set to None)"""
+        if year in self.years and city in self.cities:
+            row = self.years.index(year)
+            col = self.cities.index(city)
+            self.data[row][col] = None
+            print(f"Deleted record for {city}, {year}")
+        else:
+            print("Invalid year or city")
+
+    def retrieve(self, city, year):
+        """Retrieve temperature record"""
+        if year in self.years and city in self.cities:
+            row = self.years.index(year)
+            col = self.cities.index(city)
+            temp = self.data[row][col]
+            if temp is not None:
+                print(f"{city}, {year} → {temp}°C")
+            else:
+                print(f"No data available for {city}, {year}")
+        else:
+            print("Invalid year or city")
+
+    def populateArray(self, values):
+        """Populate entire 2D array with given values"""
+        for i in range(len(self.years)):
+            for j in range(len(self.cities)):
+                self.data[i][j] = values[i][j]
+
+    def rowMajorAccess(self):
+        """Access elements row by row"""
+        print("\nRow-major order traversal:")
+        for i in range(len(self.years)):
+            for j in range(len(self.cities)):
+                print(f"{self.years[i]} - {self.cities[j]}: {self.data[i][j]}")
+
+    def columnMajorAccess(self):
+        """Access elements column by column"""
+        print("\nColumn-major order traversal:")
+        for j in range(len(self.cities)):
+            for i in range(len(self.years)):
+                print(f"{self.years[i]} - {self.cities[j]}: {self.data[i][j]}")
+
+    def handleSparseData(self):
+        """Handle sparse data using sentinel values"""
+        print("\nHandling Sparse Data (None = Missing):")
+        for i in range(len(self.years)):
+            for j in range(len(self.cities)):
+                if self.data[i][j] is None:
+                    print(f"{self.years[i]} - {self.cities[j]}: No Data")
+                else:
+                    print(f"{self.years[i]} - {self.cities[j]}: {self.data[i][j]}°C")
+
+    def analyzeComplexity(self):
+        """Time & Space complexity analysis"""
+        print("\n--- Complexity Analysis ---")
+        print("Insert: O(1)")
+        print("Delete: O(1)")
+        print("Retrieve: O(1)")
+        print("Row/Column Traversal: O(n*m) where n=years, m=cities")
+        print("Space Complexity: O(n*m)")
+
+
+# -----------------------------
+# Example Usage
+# -----------------------------
+if __name__ == "__main__":
+    years = [2023, 2024, 2025]
+    cities = ["Delhi", "Mumbai", "Chennai"]
+
+    storage = WeatherDataStorage(years, cities)
+
+    # Insert records
+    storage.insert(2023, "Delhi", 32.5)
+    storage.insert(2024, "Mumbai", 28.1)
+    storage.insert(2025, "Chennai", 35.0)
+
+    # Retrieve
+    storage.retrieve("Delhi", 2023)
+    storage.retrieve("Mumbai", 2025)  # No data
+
+    # Delete
+    storage.delete(2024, "Mumbai")
+
+    # Traversals
+    storage.rowMajorAccess()
+    storage.columnMajorAccess()
+
+    # Sparse data handling
+    storage.handleSparseData()
+
+    # Complexity
+    storage.analyzeComplexity()
+    
